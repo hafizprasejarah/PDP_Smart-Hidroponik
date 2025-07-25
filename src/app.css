@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+* {
+  font-family: montserrat;
+}
+
+
+.progress-bar {
+  height: 8px;
+  border-radius: 9999px;
+  background-color: #e2e8f0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #f55988;
+  transition: width 0.3s ease-in-out;
+}
