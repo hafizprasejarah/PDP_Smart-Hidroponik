@@ -10,7 +10,7 @@
     } from "$lib/index";
     import { ref, onValue } from "firebase/database";
     import { onMount } from "svelte";
-    
+
     let suhu = 0;
     let ph = 0;
     let curahHujan = 0;
@@ -88,7 +88,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 max-w-6xl mx-auto">
             <div class=" flex flex-col sm:flex-row items-center gap-6"></div>
             <div
-                class="flex flex-col sm:flex-row-2 items-center gap-6 bg-gradient-to-r from-blue-700 to-blue-300 text-white rounded-3xl shadow-xl p-6 col-span-2"
+                class="flex flex-col md:flex-row lg:flex-row sm:flex-row items-center gap-6 bg-gradient-to-r from-blue-700 to-blue-300 text-white rounded-3xl shadow-xl p-6"
             >
                 <div class="flex-shrink-0">
                     {#if cuaca.image}
@@ -118,9 +118,11 @@
                     </p>
                 </div>
             </div>
-            
+
             <!-- KIRI: Sensor -->
-            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+                class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
                 <div
                     class="bg-white rounded-xl shadow p-4 border-2 border-[#f55988]"
                 >
