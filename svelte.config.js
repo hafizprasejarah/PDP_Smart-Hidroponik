@@ -9,3 +9,5 @@ export default {
     }
   },
   preprocess: preprocess()
+};
+
