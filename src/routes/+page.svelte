@@ -17,6 +17,8 @@
     let kelembapan = 0;
     let nutrisi = 0;
     let tinggiAir = 0;
+    let suhuAir = 0;
+
     $: progress = getProgress(suhu);
     $: progresspH = getProgresspH(ph);
     $: progressRain = getProgressRain(curahHujan);
@@ -34,6 +36,7 @@
             kelembapan = data?.kelembaban || 0;
             nutrisi = data?.tds || 0;
             tinggiAir = data?.waterLevel || 0;
+            suhuAir = data?.suhuAir || 0;
         });
 
         getBMKGData();
@@ -52,6 +55,7 @@
         local_datetime: "-",
         image: "",
     };
+
     async function getBMKGData() {
         const url =
             "https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=33.72.01.1001";
@@ -86,36 +90,61 @@
         </h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 max-w-6xl mx-auto">
-            <div class=" flex flex-col sm:flex-row items-center gap-6"></div>
-            <div
-                class="flex flex-col md:flex-row lg:flex-row sm:flex-row items-center gap-6 bg-gradient-to-r from-blue-700 to-blue-300 text-white rounded-3xl shadow-xl p-6"
-            >
-                <div class="flex-shrink-0">
-                    {#if cuaca.image}
-                        <img
-                            src={cuaca.image}
-                            alt="Ikon Cuaca"
-                            class="w-24 h-24 object-contain"
-                        />
-                    {/if}
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+                <div
+                    class="flex flex-col col-span-2 md:flex-row lg:flex-row sm:flex-row items-center gap-6 bg-gradient-to-r from-blue-700 to-blue-300 text-white rounded-3xl shadow-xl p-6"
+                >
+                    <div class="flex-shrink-0">
+                        {#if cuaca.image}
+                            <img
+                                src={cuaca.image}
+                                alt="Ikon Cuaca"
+                                class="w-24 h-24 object-contain"
+                            />
+                        {/if}
+                    </div>
 
-                <div class="flex-1 space-y-2">
-                    <h2 class="text-xl font-semibold">
-                        Prakiraan Cuaca Surakarta
-                    </h2>
-                    <p class="text-lg capitalize">{cuaca.weather_desc}</p>
-                    <div class="grid grid-cols-1 gap-3 text-sm">
-                        <p><strong>Suhu:</strong> {cuaca.t}°C</p>
-                        <p><strong>Kelembapan:</strong> {cuaca.hu}%</p>
-                        <p>
-                            <strong>Kecepatan Angin:</strong>
-                            {cuaca.ws} km/jam
+                    <div class="flex-1 space-y-2">
+                        <h2 class="text-xl font-semibold">
+                            Prakiraan Cuaca Surakarta
+                        </h2>
+                        <p class="text-lg capitalize">{cuaca.weather_desc}</p>
+                        <div class="grid grid-cols-1 gap-3 text-sm">
+                            <p><strong>Suhu:</strong> {cuaca.t}°C</p>
+                            <p><strong>Kelembapan:</strong> {cuaca.hu}%</p>
+                            <p>
+                                <strong>Kecepatan Angin:</strong>
+                                {cuaca.ws} km/jam
+                            </p>
+                        </div>
+                        <p class="text-xs mt-2">
+                            Waktu Update: {cuaca.local_datetime}
                         </p>
                     </div>
-                    <p class="text-xs mt-2">
-                        Waktu Update: {cuaca.local_datetime}
-                    </p>
+                </div>
+
+                <div
+                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500"
+                >
+                    <div class="flex gap-5 content-end">
+                        <div
+                            class="fa-solid fa-temperature-three-quarters text-4xl mb-2 text-blue-500 m-2"
+                            style="display: flex; align-items: center;"
+                        ></div>
+                        <div class="">
+                            <div class="text-sm text-gray-950">Suhu Air</div>
+                            <div class="text-xl font-semibold">
+                                {suhuAir.toFixed(2)} °C
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                        <div
+                            class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
+                            style="width: {progress}%"
+                        ></div>
+                    </div>
                 </div>
             </div>
 
@@ -124,92 +153,92 @@
                 class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             >
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 border-[#f55988]"
+                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-temperature-three-quarters text-4xl mb-2 text-[#f55988] m-2"
+                            class="fa-solid fa-temperature-three-quarters text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-950">Suhu</div>
-                            <div class="text-xl font-semibold">{suhu} °C</div>
+                            <div class="text-xl font-semibold">{suhu.toFixed(2)} °C</div>
                         </div>
                     </div>
 
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
+                            class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
                             style="width: {progress}%"
                         ></div>
                     </div>
                 </div>
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 border-[#f55988]"
+                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-droplet text-4xl mb-2 text-[#f55988] m-2"
+                            class="fa-solid fa-droplet text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-500">PH Air</div>
-                            <div class="text-xl font-semibold">{ph} pH</div>
+                            <div class="text-xl font-semibold">{ph.toFixed(2)} pH</div>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class=" bg-pink-500 h-2.5 rounded-full transition-all duration-300"
+                            class=" bg-blue-500 h-2.5 rounded-full transition-all duration-300"
                             style="width: {progresspH}%"
                         ></div>
                     </div>
                 </div>
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 border-[#f55988]"
+                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-cloud-rain text-4xl mb-2 text-[#f55988] m-2"
+                            class="fa-solid fa-cloud-rain text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-500">Curah Hujan</div>
                             <div class="text-xl font-semibold">
-                                {curahHujan} mm
+                                {curahHujan.toFixed(2)} mm
                             </div>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class=" bg-pink-500 h-2.5 rounded-full transition-all duration-300"
+                            class=" bg-blue-500 h-2.5 rounded-full transition-all duration-300"
                             style="width: {progressRain}%"
                         ></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 border-2 border-blue-500">
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-droplet text-4xl mb-2 text-[#f55988] m-2"
+                            class="fa-solid fa-droplet text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-500">Kelembapan</div>
                             <div class="text-xl font-semibold">
-                                {kelembapan} %
+                                {kelembapan.toFixed(2)} %
                             </div>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
+                            class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
                             style="width: {progressHumidity}%"
                         ></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 border-2  border-blue-500">
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-brands fa-nutritionix text-4xl mb-2 text-[#f55988] m-2"
+                            class="fa-brands fa-nutritionix text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
@@ -221,15 +250,15 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
+                            class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
                             style="width: {progressNutrition}%"
                         ></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4">
+                <div class="bg-white rounded-xl shadow p-4 border-2  border-blue-500">
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-water-ladder text-4xl mb-2 text-[#f55988] m-2"
+                            class="fa-solid fa-water-ladder text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
@@ -237,13 +266,13 @@
                                 Ketinggian Air
                             </div>
                             <div class="text-xl font-semibold">
-                                {tinggiAir} %
+                                {tinggiAir.toFixed(2)} %
                             </div>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
+                            class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
                             style="width: {progressWaterHeight}%"
                         ></div>
                     </div>
