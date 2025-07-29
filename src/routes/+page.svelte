@@ -176,11 +176,11 @@
                     </div>
                 </div>
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 3? 'border-red-500': ph < 6 ? 'border-yellow-400' : 'border-blue-500'} `}"
+                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 3? 'border-red-500': ph < 5 ? 'border-yellow-400' : 'border-blue-500'} `}"
                 >
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-droplet text-4xl mb-2  m-2 {`${ph < 3? 'text-red-500': ph < 6 ? 'text-yellow-400' : 'text-blue-500'}`}"
+                            class="fa-solid fa-droplet text-4xl mb-2  m-2 {`${ph < 3? 'text-red-500': ph < 5 ? 'text-yellow-400' : 'text-blue-500'}`}"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
@@ -192,7 +192,7 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 3? 'bg-red-500': ph < 6 ? 'bg-yellow-400' : 'bg-blue-500'}`}"
+                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 3? 'bg-red-500': ph < 5 ? 'bg-yellow-400' : 'bg-blue-500'}`}"
                             style="width: {progresspH}%"
                         ></div>
                     </div>
