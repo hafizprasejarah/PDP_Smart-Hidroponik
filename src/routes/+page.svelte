@@ -124,26 +124,26 @@
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500"
+                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500 flex flex-rwo  items-center gap-4"
                 >
-                    <div class="flex gap-5 content-end">
-                        <div
-                            class="fa-solid fa-temperature-three-quarters text-4xl mb-2 text-blue-500 m-2"
-                            style="display: flex; align-items: center;"
-                        ></div>
+                    <div
+                        class="fa-solid fa-temperature-arrow-up text-6xl mb-2 text-blue-500 m-2"
+                        style="display: flex; align-items: center;"
+                    ></div>
+                    <div class="flex w-full content-end flex-col">
                         <div class="">
-                            <div class="text-sm text-gray-950">Suhu Air</div>
-                            <div class="text-xl font-semibold">
+                            <div class="text-md text-gray-950">Suhu Air</div>
+                            <div class="text-2xl font-semibold">
                                 {suhuAir.toFixed(2)} °C
                             </div>
                         </div>
-                    </div>
 
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div
-                            class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
-                            style="width: {progress}%"
-                        ></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                            <div
+                                class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
+                                style="width: {progress}%"
+                            ></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,9 @@
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-950">Suhu</div>
-                            <div class="text-xl font-semibold">{suhu.toFixed(2)} °C</div>
+                            <div class="text-xl font-semibold">
+                                {suhu.toFixed(2)} °C
+                            </div>
                         </div>
                     </div>
 
@@ -174,21 +176,23 @@
                     </div>
                 </div>
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
+                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 3? 'border-red-500': ph < 6 ? 'border-yellow-400' : 'border-blue-500'} `}"
                 >
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-droplet text-4xl mb-2 text-blue-500 m-2"
+                            class="fa-solid fa-droplet text-4xl mb-2  m-2 {`${ph < 3? 'text-red-500': ph < 6 ? 'text-yellow-400' : 'text-blue-500'}`}"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-500">PH Air</div>
-                            <div class="text-xl font-semibold">{ph.toFixed(2)} pH</div>
+                            <div class="text-xl font-semibold">
+                                {ph.toFixed(2)} pH
+                            </div>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class=" bg-blue-500 h-2.5 rounded-full transition-all duration-300"
+                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 3? 'bg-red-500': ph < 6 ? 'bg-yellow-400' : 'bg-blue-500'}`}"
                             style="width: {progresspH}%"
                         ></div>
                     </div>
@@ -215,7 +219,9 @@
                         ></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4 border-2 border-blue-500">
+                <div
+                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
+                >
                     <div class="flex gap-5 content-end">
                         <div
                             class="fa-solid fa-droplet text-4xl mb-2 text-blue-500 m-2"
@@ -235,7 +241,9 @@
                         ></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4 border-2  border-blue-500">
+                <div
+                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
+                >
                     <div class="flex gap-5 content-end">
                         <div
                             class="fa-brands fa-nutritionix text-4xl mb-2 text-blue-500 m-2"
@@ -255,7 +263,9 @@
                         ></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-xl shadow p-4 border-2  border-blue-500">
+                <div
+                    class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
+                >
                     <div class="flex gap-5 content-end">
                         <div
                             class="fa-solid fa-water-ladder text-4xl mb-2 text-blue-500 m-2"
