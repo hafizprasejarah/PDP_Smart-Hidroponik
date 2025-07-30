@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-auto';
 
+<<<<<<< HEAD
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
@@ -13,3 +14,15 @@ const config = {
 };
 
 export default config;
+=======
+export default {
+  kit: {
+    adapter: adapter(),
+    paths: {
+      base: '/hidro' // jika kamu ingin mengakses via /hidro
+    }
+  },
+  preprocess: preprocess()
+};
+
+>>>>>>> f1f78ffe57bbc660780e39aaf399da4ef4c68b39
