@@ -18,6 +18,8 @@
     let nutrisi = 0;
     let tinggiAir = 0;
     let suhuAir = 0;
+    let reLay1 = "";
+    let reLay2 = "";
 
     $: progress = getProgress(suhu);
     $: progresspH = getProgresspH(ph);
@@ -39,12 +41,15 @@
             suhuAir = data?.suhuAir || 0;
         });
 
+        const relayStatus = ref(rtdb, "status/");
+        onValue(relayStatus, (snapshot) => {
+            const data = snapshot.val();
+            let reLay1 = data?.relay1 || "";
+            let reLay2 = data?.relay2 || "";
+        });
+
         getBMKGData();
     });
-
-    const relay = {
-        relays: ["OFF", "ON", "OFF"],
-    };
 
     let cuaca = {
         weather_desc: "Memuat data...",
@@ -54,6 +59,10 @@
         tcc: "-",
         local_datetime: "-",
         image: "",
+    };
+    
+    const relay = {
+        relays: [reLay1, reLay2],
     };
 
     async function getBMKGData() {
@@ -124,7 +133,7 @@
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500 flex flex-rwo  items-center gap-4"
+                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500 flex flex-rwo items-center gap-4"
                 >
                     <div
                         class="fa-solid fa-temperature-arrow-up text-6xl mb-2 text-blue-500 m-2"
@@ -176,11 +185,11 @@
                     </div>
                 </div>
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 3? 'border-red-500': ph < 6 ? 'border-yellow-400' : 'border-blue-500'} `}"
+                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 5.5 ? 'border-red-500' : 'border-blue-500'} `}"
                 >
                     <div class="flex gap-5 content-end">
                         <div
-                            class="fa-solid fa-droplet text-4xl mb-2  m-2 {`${ph < 3? 'text-red-500': ph < 6 ? 'text-yellow-400' : 'text-blue-500'}`}"
+                            class="fa-solid fa-droplet text-4xl mb-2 m-2 {`${ph < 5.5 ? 'text-red-500' : 'text-blue-500'}`}"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
@@ -192,7 +201,7 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 3? 'bg-red-500': ph < 6 ? 'bg-yellow-400' : 'bg-blue-500'}`}"
+                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 5.5 ? 'bg-red-500' : 'bg-blue-500'}`}"
                             style="width: {progresspH}%"
                         ></div>
                     </div>
@@ -292,7 +301,7 @@
 
         <!-- Relay -->
         <div
-            class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 max-w-4xl mx-auto"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10 max-w-4xl mx-auto"
         >
             {#each relay.relays as status, i}
                 <div class="bg-white rounded-xl shadow p-4 text-center">
