@@ -18,8 +18,9 @@
     let nutrisi = 0;
     let tinggiAir = 0;
     let suhuAir = 0;
-    let reLay1 = "";
-    let reLay2 = "";
+
+    let reLay1 = 0;
+    let reLay2 = 0;
 
     $: progress = getProgress(suhu);
     $: progresspH = getProgresspH(ph);
@@ -44,9 +45,11 @@
         const relayStatus = ref(rtdb, "status/");
         onValue(relayStatus, (snapshot) => {
             const data = snapshot.val();
-            let reLay1 = data?.relay1 || "";
-            let reLay2 = data?.relay2 || "";
+            reLay1 = data?.relay1;
+            reLay2 = data?.relay2;
         });
+
+    
 
         getBMKGData();
     });
@@ -60,9 +63,12 @@
         local_datetime: "-",
         image: "",
     };
-    
-    const relay = {
-        relays: [reLay1, reLay2],
+
+    $: statusRelay1 = reLay1 == 0 ? "OFF" : "ON";
+    $: statusRelay2 = reLay2 == 0 ? "OFF" : "ON";
+
+    $: relay = {
+        relays: [statusRelay1, statusRelay2],
     };
 
     async function getBMKGData() {
