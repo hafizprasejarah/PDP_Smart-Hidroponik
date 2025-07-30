@@ -18,6 +18,8 @@
     let nutrisi = 0;
     let tinggiAir = 0;
     let suhuAir = 0;
+    let reLay1 = "";
+    let reLay2 = "";
 
     $: progress = getProgress(suhu);
     $: progresspH = getProgresspH(ph);
@@ -39,12 +41,15 @@
             suhuAir = data?.suhuAir || 0;
         });
 
+        const relayStatus = ref(rtdb, "status/");
+        onValue(relayStatus, (snapshot) => {
+            const data = snapshot.val();
+            let reLay1 = data?.relay1 || "";
+            let reLay2 = data?.relay2 || "";
+        });
+
         getBMKGData();
     });
-
-    const relay = {
-        relays: ["OFF", "ON", "OFF"],
-    };
 
     let cuaca = {
         weather_desc: "Memuat data...",
@@ -54,6 +59,10 @@
         tcc: "-",
         local_datetime: "-",
         image: "",
+    };
+    
+    const relay = {
+        relays: [reLay1, reLay2],
     };
 
     async function getBMKGData() {
@@ -89,19 +98,10 @@
             SMART HIDROPONIK
         </h1>
 
-<<<<<<< HEAD
-        <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
-            <!-- Bagian Prakiraan Cuaca & Ringkasan Suhu -->
-            <div class="flex flex-col lg:flex-row gap-4">
-                <!-- Prakiraan Cuaca -->
-                <div
-                    class="flex-1 flex flex-col md:flex-row items-center gap-6 bg-gradient-to-r from-blue-700 to-blue-300 text-white rounded-3xl shadow-xl p-6"
-=======
         <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
                 <div
                     class="flex flex-col col-span-2 md:flex-row lg:flex-row sm:flex-row items-center gap-6 bg-gradient-to-r from-blue-700 to-blue-300 text-white rounded-3xl shadow-xl p-6"
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                 >
                     <div class="flex-shrink-0">
                         {#if cuaca.image}
@@ -113,22 +113,12 @@
                         {/if}
                     </div>
 
-<<<<<<< HEAD
-                    <div class="flex-1 space-y-2 text-center md:text-left">
-=======
                     <div class="flex-1 space-y-2">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                         <h2 class="text-xl font-semibold">
                             Prakiraan Cuaca Surakarta
                         </h2>
                         <p class="text-lg capitalize">{cuaca.weather_desc}</p>
-<<<<<<< HEAD
-                        <div
-                            class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm"
-                        >
-=======
                         <div class="grid grid-cols-1 gap-3 text-sm">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             <p><strong>Suhu:</strong> {cuaca.t}°C</p>
                             <p><strong>Kelembapan:</strong> {cuaca.hu}%</p>
                             <p>
@@ -140,12 +130,10 @@
                             Waktu Update: {cuaca.local_datetime}
                         </p>
                     </div>
-<<<<<<< HEAD
-=======
                 </div>
 
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500 flex flex-rwo  items-center gap-4"
+                    class="bg-white rounded-xl shadow p-4 border-2 mt-4 sm:mt-0 border-blue-500 flex flex-rwo items-center gap-4"
                 >
                     <div
                         class="fa-solid fa-temperature-arrow-up text-6xl mb-2 text-blue-500 m-2"
@@ -166,20 +154,14 @@
                             ></div>
                         </div>
                     </div>
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                 </div>
+            </div>
 
-                <!-- Suhu Ringkas -->
+            <!-- KIRI: Sensor -->
+            <div
+                class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
                 <div
-<<<<<<< HEAD
-                    class="w-full lg:w-64 bg-white rounded-xl shadow p-4 border-2 border-[#f55988]"
-                >
-                    <div class="flex items-center gap-5">
-                        <i
-                            class="fa-solid fa-temperature-three-quarters text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-=======
                     class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
                     <div class="flex gap-5 content-end">
@@ -188,13 +170,13 @@
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             <div class="text-sm text-gray-950">Suhu</div>
                             <div class="text-xl font-semibold">
                                 {suhu.toFixed(2)} °C
                             </div>
                         </div>
                     </div>
+
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
                             class="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
@@ -202,43 +184,12 @@
                         ></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Sensor Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Kartu Sensor (Gunakan ulang komponen ini dengan data berbeda) -->
                 <div
-                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 3? 'border-red-500': ph < 6 ? 'border-yellow-400' : 'border-blue-500'} `}"
+                    class="bg-white rounded-xl shadow p-4 border-2 {` ${ph < 5.5 ? 'border-red-500' : 'border-blue-500'} `}"
                 >
-                    <div class="flex items-center gap-5">
-                        <i
-                            class="fa-solid fa-temperature-three-quarters text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-                            <div class="text-sm text-gray-950">Suhu</div>
-                            <div class="text-xl font-semibold">{suhu} °C</div>
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                    <div class="flex gap-5 content-end">
                         <div
-<<<<<<< HEAD
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
-                            style="width: {progress}%"
-                        ></div>
-                    </div>
-                </div>
-
-                <div
-                    class="bg-white rounded-xl shadow p-4 border-2 border-[#f55988]"
-                >
-                    <div class="flex items-center gap-5">
-                        <i class="fa-solid fa-droplet text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-                            <div class="text-sm text-gray-500">pH Air</div>
-                            <div class="text-xl font-semibold">{ph} pH</div>
-=======
-                            class="fa-solid fa-droplet text-4xl mb-2  m-2 {`${ph < 3? 'text-red-500': ph < 6 ? 'text-yellow-400' : 'text-blue-500'}`}"
+                            class="fa-solid fa-droplet text-4xl mb-2 m-2 {`${ph < 5.5 ? 'text-red-500' : 'text-blue-500'}`}"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
@@ -246,38 +197,24 @@
                             <div class="text-xl font-semibold">
                                 {ph.toFixed(2)} pH
                             </div>
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-<<<<<<< HEAD
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
-=======
-                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 3? 'bg-red-500': ph < 6 ? 'bg-yellow-400' : 'bg-blue-500'}`}"
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
+                            class=" {`h-2.5 rounded-full transition-all duration-300 ${ph < 5.5 ? 'bg-red-500' : 'bg-blue-500'}`}"
                             style="width: {progresspH}%"
                         ></div>
                     </div>
                 </div>
-
                 <div
                     class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
-<<<<<<< HEAD
-                    <div class="flex items-center gap-5">
-                        <i
-                            class="fa-solid fa-cloud-rain text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-=======
                     <div class="flex gap-5 content-end">
                         <div
                             class="fa-solid fa-cloud-rain text-4xl mb-2 text-blue-500 m-2"
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             <div class="text-sm text-gray-500">Curah Hujan</div>
                             <div class="text-xl font-semibold">
                                 {curahHujan.toFixed(2)} mm
@@ -286,23 +223,11 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div
-<<<<<<< HEAD
-                            class="bg-pink-500 h-2.5 rounded-full transition-all duration-300"
-=======
                             class=" bg-blue-500 h-2.5 rounded-full transition-all duration-300"
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             style="width: {progressRain}%"
                         ></div>
                     </div>
                 </div>
-<<<<<<< HEAD
-
-                <div class="bg-white rounded-xl shadow p-4">
-                    <div class="flex items-center gap-5">
-                        <i class="fa-solid fa-droplet text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-=======
                 <div
                     class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
@@ -312,7 +237,6 @@
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             <div class="text-sm text-gray-500">Kelembapan</div>
                             <div class="text-xl font-semibold">
                                 {kelembapan.toFixed(2)} %
@@ -326,15 +250,6 @@
                         ></div>
                     </div>
                 </div>
-<<<<<<< HEAD
-
-                <div class="bg-white rounded-xl shadow p-4">
-                    <div class="flex items-center gap-5">
-                        <i
-                            class="fa-brands fa-nutritionix text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-=======
                 <div
                     class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
@@ -344,7 +259,6 @@
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             <div class="text-sm text-gray-500">Nutrisi</div>
                             <div class="text-xl font-semibold">
                                 {Math.trunc(nutrisi)} ppm
@@ -358,15 +272,6 @@
                         ></div>
                     </div>
                 </div>
-<<<<<<< HEAD
-
-                <div class="bg-white rounded-xl shadow p-4">
-                    <div class="flex items-center gap-5">
-                        <i
-                            class="fa-solid fa-water-ladder text-4xl text-[#f55988]"
-                        ></i>
-                        <div>
-=======
                 <div
                     class="bg-white rounded-xl shadow p-4 border-2 border-blue-500"
                 >
@@ -376,7 +281,6 @@
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
->>>>>>> d6063f87aa30f21005e1e0785732d788f8e331f5
                             <div class="text-sm text-gray-500">
                                 Ketinggian Air
                             </div>
@@ -397,7 +301,7 @@
 
         <!-- Relay -->
         <div
-            class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 max-w-4xl mx-auto"
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10 max-w-4xl mx-auto"
         >
             {#each relay.relays as status, i}
                 <div class="bg-white rounded-xl shadow p-4 text-center">
