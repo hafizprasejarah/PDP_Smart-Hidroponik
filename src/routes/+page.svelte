@@ -1,5 +1,5 @@
 <script>
-    import { rtdb } from "$lib/firebase";
+    import { auth, rtdb } from "$lib/firebase";
     import {
         getProgress,
         getProgressHumidity,
@@ -9,6 +9,7 @@
         getProgressWaterHeigt,
     } from "$lib/index";
     import { ref, onValue } from "firebase/database";
+    import { signInWithEmailAndPassword } from "firebase/auth";
     import { onMount } from "svelte";
 
     let suhu = 0;
@@ -30,26 +31,36 @@
     $: progressWaterHeight = getProgressWaterHeigt(tinggiAir);
 
     onMount(() => {
-        const sensorRef = ref(rtdb, "sensor/");
-        onValue(sensorRef, (snapshot) => {
-            const data = snapshot.val();
-            suhu = data?.suhu || 0;
-            ph = data?.pH || 0;
-            curahHujan = data?.curahHujan || 0;
-            kelembapan = data?.kelembaban || 0;
-            nutrisi = data?.tds || 0;
-            tinggiAir = data?.waterLevel || 0;
-            suhuAir = data?.suhuAir || 0;
-        });
+        const email = import.meta.env.VITE_FIREBASE_EMAIL;
+        const password = import.meta.env.VITE_FIREBASE_PASSWORD;
 
-        const relayStatus = ref(rtdb, "status/");
-        onValue(relayStatus, (snapshot) => {
-            const data = snapshot.val();
-            reLay1 = data?.relay1;
-            reLay2 = data?.relay2;
-        });
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                console.log("Login sukses");
 
-    
+                const sensorRef = ref(rtdb, "sensor/");
+                onValue(sensorRef, (snapshot) => {
+                    const data = snapshot.val();
+                    suhu = data?.suhu || 0;
+                    ph = data?.pH || 0;
+                    curahHujan = data?.curahHujan || 0;
+                    kelembapan = data?.kelembaban || 0;
+                    nutrisi = data?.tds || 0;
+                    tinggiAir = data?.waterLevel || 0;
+                    suhuAir = data?.suhuAir || 0;
+                });
+
+                const relayStatus = ref(rtdb, "status/");
+                onValue(relayStatus, (snapshot) => {
+                    const data = snapshot.val();
+                    reLay1 = data?.relay1;
+                    reLay2 = data?.relay2;
+                });
+
+            })
+            .catch((err) => {
+                console.error("Login gagal:", err.message);
+            });
 
         getBMKGData();
     });
