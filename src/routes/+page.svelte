@@ -36,7 +36,6 @@
 
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                console.log("Login sukses");
 
                 const sensorRef = ref(rtdb, "sensor/");
                 onValue(sensorRef, (snapshot) => {
@@ -46,7 +45,7 @@
                     curahHujan = data?.curahHujan || 0;
                     kelembapan = data?.kelembaban || 0;
                     nutrisi = data?.tds || 0;
-                    tinggiAir = data?.waterLevel || 0;
+                    tinggiAir = data?.volumeAir || 0;
                     suhuAir = data?.suhuAir || 0;
                 });
 
@@ -299,10 +298,10 @@
                         ></div>
                         <div class="">
                             <div class="text-sm text-gray-500">
-                                Ketinggian Air
+                                Volume Air
                             </div>
                             <div class="text-xl font-semibold">
-                                {tinggiAir.toFixed(2)} %
+                                {tinggiAir.toFixed(2)} Liter
                             </div>
                         </div>
                     </div>
@@ -323,7 +322,7 @@
             {#each relay.relays as status, i}
                 <div class="bg-white rounded-xl shadow p-4 text-center">
                     <div class="text-sm text-gray-600 mb-2">
-                        Kondisi Relay {i + 1}
+                        Kondisi Pompa {i + 1}
                     </div>
                     <div
                         class={`text-lg font-bold ${status === "ON" ? "text-green-600" : "text-red-500"}`}

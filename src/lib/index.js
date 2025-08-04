@@ -19,6 +19,6 @@ export const getProgressNutrition = (value, max = 2000) => {
     return Math.min(100, Math.max(0, (value / max) * 100));
 };
 
-export const getProgressWaterHeigt = (value, max = 100) => {
+export const getProgressWaterHeigt = (value, max = 200) => {
     return Math.min(100, Math.max(0, (value / max) * 100));
 };
