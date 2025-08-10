@@ -71,7 +71,10 @@
             return;
         }
 
-        const XLSX = await import("xlsx");
+    if (typeof window === 'undefined') return;
+
+
+    const XLSX = await import('xlsx');
 
         const data = logs.map((log) => ({
             Tanggal: new Date(log.timestamp?.seconds * 1000).toLocaleDateString(
