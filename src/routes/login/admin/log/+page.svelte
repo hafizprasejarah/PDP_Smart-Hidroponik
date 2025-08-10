@@ -65,13 +65,15 @@
         fetchLogs(selectedData);
     });
 
-    function exportLogsToExcel() {
+    async function exportLogsToExcel() {
         if (!logs || logs.length === 0) {
             alert("Data log kosong.");
             return;
         }
 
-        // Siapkan data array untuk worksheet
+        // Lazy import, aman untuk build
+        const XLSX = await import("xlsx");
+
         const data = logs.map((log) => ({
             Tanggal: new Date(log.timestamp?.seconds * 1000).toLocaleDateString(
                 "id-ID",
@@ -85,7 +87,6 @@
                     hour12: false,
                 },
             ),
-
             Suhu: log.suhu,
             Kelembaban: log.kelembaban,
             pH: log.ph,
@@ -99,7 +100,6 @@
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Log Sensor");
 
-        // Unduh file
         XLSX.writeFile(workbook, "log_sensor.xlsx");
     }
 </script>
