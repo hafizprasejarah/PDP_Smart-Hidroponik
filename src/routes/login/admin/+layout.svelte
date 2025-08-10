@@ -9,9 +9,8 @@
     onMount(() => {
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                goto("/admin");
+                goto("/login");
             } else {
-                console.log("Login sebagai:", user.email);
                 loading = false;
             }
         });

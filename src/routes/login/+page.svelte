@@ -5,18 +5,26 @@
 
     let email = "";
     let password = "";
+    let errorMSG = "";
+    let successMSG = "";
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     async function loginUser(event) {
         event.preventDefault();
+        try {
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                email,
+                password,
+            );
 
-        const userCredential = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password,
-        );
-
-        const user = userCredential.user;
-        goto("/admin/dashboard");
+            successMSG = "Berhasil Login";
+            const user = userCredential.user;
+            await delay(1000);
+            goto("/login/admin/dashboard");
+        } catch (error) {
+            errorMSG = "Email atau password salah";
+        }
     }
 </script>
 
@@ -38,20 +46,45 @@
         >
             <label for="email">Email</label>
             <input
-                type="text"
+                required
+                type="email"
                 id="email"
                 bind:value={email}
                 class="border-none outline-none pl-2 required rounded-md"
+                on:input={() => {
+                    errorMSG = "";
+                    successMSG = "";
+                }}
             />
             <div class="border-b-2 mb-5"></div>
             <label for="password">password</label>
             <input
+                required
                 type="password"
                 id="password"
                 bind:value={password}
                 class="border-none outline-none pl-2 required rounded-md"
+                on:input={() => {
+                    errorMSG = "";
+                    successMSG = "";
+                }}
             />
             <div class="border-b-2 mb-5"></div>
+
+            {#if errorMSG != ""}
+                <div
+                    class=" bg-red-100 rounded-[5px] text-[12px] p-3 text-red-500 font-semibold"
+                >
+                    {errorMSG}
+                </div>
+            {:else if successMSG != ""}
+                <div
+                    class=" bg-green-100 rounded-[5px] text-[12px] p-3 text-green-500 font-semibold"
+                >
+                    {successMSG}
+                </div>
+            {:else}{/if}
+
             <button
                 type="submit"
                 class="mt-4 bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200"

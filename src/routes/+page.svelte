@@ -12,6 +12,9 @@
     import { signInWithEmailAndPassword } from "firebase/auth";
     import { onMount } from "svelte";
 
+    import { onAuthStateChanged } from "firebase/auth";
+    import { goto } from "$app/navigation";
+
     let suhu = 0;
     let ph = 0;
     let curahHujan = 0;
@@ -31,12 +34,12 @@
     $: progressWaterHeight = getProgressWaterHeigt(tinggiAir);
 
     onMount(() => {
+
         const email = import.meta.env.VITE_FIREBASE_EMAIL;
         const password = import.meta.env.VITE_FIREBASE_PASSWORD;
 
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-
                 const sensorRef = ref(rtdb, "sensor/");
                 onValue(sensorRef, (snapshot) => {
                     const data = snapshot.val();
@@ -55,7 +58,6 @@
                     reLay1 = data?.relay1;
                     reLay2 = data?.relay2;
                 });
-
             })
             .catch((err) => {
                 console.error("Login gagal:", err.message);
@@ -297,9 +299,7 @@
                             style="display: flex; align-items: center;"
                         ></div>
                         <div class="">
-                            <div class="text-sm text-gray-500">
-                                Volume Air
-                            </div>
+                            <div class="text-sm text-gray-500">Volume Air</div>
                             <div class="text-xl font-semibold">
                                 {tinggiAir.toFixed(2)} Liter
                             </div>

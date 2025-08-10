@@ -15,6 +15,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const db = getFirestore(app);         // Firestore
 export const rtdb = getDatabase(app);        // Realtime DB (jika pakai)
 export const auth = getAuth(app);            // Auth (jika pakai)
