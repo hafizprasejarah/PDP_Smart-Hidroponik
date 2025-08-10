@@ -1,7 +1,8 @@
 <script>
     import { page } from "$app/stores";
-    import Logo from "$lib/components/Logo.svg.svelte";
+    import Logo from "$lib/components/logo.svg.svelte";
     import { derived } from "svelte/store";
+    import { base } from '$app/paths';
 
     const currentPath = derived(page, ($page) => $page.url.pathname);
 </script>
@@ -25,9 +26,9 @@
         <ul class="flex flex-col gap-3">
             <li class="relative top-8 cursor-pointer">
                 <a
-                    href="/login/admin/dashboard"
+                    href="{base}/login/admin/dashboard"
                     class={`flex items-center gap-4 p-2  rounded-md transition duration-200 hover:bg-white/30 ${
-                        currentPath === "/login/admin/dashboard"
+                        currentPath === "{base}/login/admin/dashboard"
                             ? "bg-white/30 text-white font-semibold"
                             : "text-white/70"
                     }`}
@@ -39,9 +40,9 @@
 
             <li class="relative top-8">
                 <a
-                    href="/login/admin/log"
+                    href="{base}/login/admin/log"
                     class={`flex items-center gap-4 p-2 rounded-md transition duration-200 hover:bg-white/30 ${
-                        currentPath === "/login/admin/log"
+                        currentPath === "{base}/login/admin/log"
                             ? "bg-white/30 text-white font-semibold"
                             : "text-white/70"
                     }`}
@@ -61,9 +62,9 @@
     <ul class="flex justify-around items-center py-2">
         <li>
             <a
-                href="/login/admin/dashboard"
+                href="{base}/login/admin/dashboard"
                 class={`flex flex-col items-center text-xs ${
-                    currentPath === "/login/admin/dashboard"
+                    currentPath === "{base}/login/admin/dashboard"
                         ? "text-white font-semibold"
                         : "text-white/70"
                 }`}
@@ -75,9 +76,9 @@
 
         <li>
             <a
-                href="/login/admin/log"
+                href="{base}/login/admin/log"
                 class={`flex flex-col items-center text-xs ${
-                    currentPath === "/login/admin/log"
+                    currentPath === "{base}/login/admin/log"
                         ? "text-white font-semibold"
                         : "text-white/70"
                 }`}

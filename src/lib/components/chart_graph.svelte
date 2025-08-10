@@ -49,28 +49,24 @@
         for (let i = 0; i < logs.length; i++) {
             data.push(logs[i]?.[selectedData] ?? 0);
 
-            const ts = logs[i]?.timestamp;
-            if (ts && typeof ts.toDate === "function") {
-                const dateObj = ts.toDate();
+const tsMillis = (logs[i]?.timestamp.seconds * 1000) - (7 * 60 * 60 * 1000);
+const dateObj = new Date(tsMillis);
 
-                const tanggal = dateObj.toLocaleDateString("id-ID", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                });
+const tanggal = dateObj.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+});
 
-                const waktu = dateObj.toLocaleTimeString("id-ID", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                });
+const waktu = dateObj.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+});
 
-                const formatted = `${tanggal} ${waktu}`;
+const formatted = `${tanggal} ${waktu}`;
+timestamp.push(formatted);
 
-                timestamp.push(formatted);
-            } else {
-                timestamp.push("Invalid Date");
-            }
         }
     }
 

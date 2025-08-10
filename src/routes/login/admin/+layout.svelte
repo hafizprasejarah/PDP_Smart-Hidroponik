@@ -3,13 +3,14 @@
     import { auth } from "$lib/firebase";
     import { onAuthStateChanged } from "firebase/auth";
     import { goto } from "$app/navigation";
+    import { base } from "$app/paths";
 
     let loading = true;
 
     onMount(() => {
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                goto("/login");
+                goto(`${base}/login`);
             } else {
                 loading = false;
             }

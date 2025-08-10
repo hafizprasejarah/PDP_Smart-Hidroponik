@@ -2,6 +2,7 @@
     import { goto } from "$app/navigation";
     import { auth } from "$lib/firebase";
     import { signInWithEmailAndPassword } from "firebase/auth";
+    import { base } from '$app/paths';
 
     let email = "";
     let password = "";
@@ -21,7 +22,7 @@
             successMSG = "Berhasil Login";
             const user = userCredential.user;
             await delay(1000);
-            goto("/login/admin/dashboard");
+            goto(`${base}/login/admin/dashboard`);
         } catch (error) {
             errorMSG = "Email atau password salah";
         }

@@ -18,6 +18,8 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import Sidebar from "$lib/components/sidebar.svelte";
+    import { base } from '$app/paths';
+    
     $: currentPath = $page.url.pathname;
 
     let sensorData = [];

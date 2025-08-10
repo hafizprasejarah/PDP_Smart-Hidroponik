@@ -66,18 +66,17 @@
     });
 
     async function exportLogsToExcel() {
+        
         if (!logs || logs.length === 0) {
             alert("Data log kosong.");
             return;
         }
 
-    if (typeof window === 'undefined') return;
-
-
-    const XLSX = await import('xlsx');
+        // Lazy import, aman untuk build
+        const XLSX = await import("xlsx");
 
         const data = logs.map((log) => ({
-            Tanggal: new Date(log.timestamp?.seconds * 1000).toLocaleDateString(
+            Tanggal: new Date( (log.timestamp?.seconds * 1000) - (7 * 60 * 60 * 1000)).toLocaleDateString(
                 "id-ID",
                 {
                     timeZone: "Asia/Jakarta",
@@ -175,7 +174,7 @@
                                     <td class="px-4 py-2">{i + 1}</td>
                                     <td class="px-4 py-2">
                                         {new Date(
-                                            log.timestamp?.seconds * 1000,
+                                            (log.timestamp?.seconds * 1000) - (7 * 60 * 60 * 1000),
                                         ).toLocaleDateString("id-ID", {
                                             timeZone: "Asia/Jakarta",
                                             day: "numeric",
