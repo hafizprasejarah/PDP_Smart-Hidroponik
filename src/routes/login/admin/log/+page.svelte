@@ -13,7 +13,7 @@
         Timestamp,
     } from "firebase/firestore";
     import { db } from "$lib/firebase";
-    import * as XLSX from "xlsx";
+
     import Sidebar from "$lib/components/sidebar.svelte";
 
     $: currentPath = $page.url.pathname;
@@ -71,7 +71,6 @@
             return;
         }
 
-        // Lazy import, aman untuk build
         const XLSX = await import("xlsx");
 
         const data = logs.map((log) => ({
