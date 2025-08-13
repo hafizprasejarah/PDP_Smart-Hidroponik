@@ -19,7 +19,7 @@
     import { page } from "$app/stores";
     import Sidebar from "$lib/components/sidebar.svelte";
     import { base } from '$app/paths';
-    
+
     $: currentPath = $page.url.pathname;
 
     let sensorData = [];
@@ -93,8 +93,8 @@
     async function logout() {
         try {
             await signOut(auth);
-            console.log("User setelah logout:", auth.currentUser);
-            goto("/login");
+            
+            goto(`${base}/login`);
         } catch (error) {
             alert(`Logout gagal: ${error.message}`);
         }

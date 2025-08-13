@@ -1,19 +1,29 @@
 <script>
     import { onMount } from "svelte";
-    import { auth } from "$lib/firebase";
+    import { auth, db } from "$lib/firebase";
     import { onAuthStateChanged } from "firebase/auth";
+    import { doc, getDoc, collection, getDocs } from "firebase/firestore";
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
 
     let loading = true;
 
     onMount(() => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 goto(`${base}/login`);
-            } else {
-                loading = false;
             }
+
+            // Ambil role dari Firestore
+            const userSnap = await getDoc(doc(db, "users", user.uid));
+            const userData = userSnap.data();
+
+            if (!userData?.role || userData.role !== "admin") {
+                goto(`${base}/`);
+                return;
+            }
+
+            loading = false;
         });
     });
 </script>
