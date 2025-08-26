@@ -66,7 +66,6 @@
     });
 
     async function exportLogsToExcel() {
-        
         if (!logs || logs.length === 0) {
             alert("Data log kosong.");
             return;
@@ -76,18 +75,17 @@
         const XLSX = await import("xlsx");
 
         const data = logs.map((log) => ({
-            Tanggal: new Date( (log.timestamp?.seconds * 1000) - (7 * 60 * 60 * 1000)).toLocaleDateString(
-                "id-ID",
-                {
-                    timeZone: "Asia/Jakarta",
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                },
-            ),
+            Tanggal: new Date(
+                log.timestamp?.seconds * 1000 - 7 * 60 * 60 * 1000,
+            ).toLocaleDateString("id-ID", {
+                timeZone: "Asia/Jakarta",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }),
             Suhu: log.suhu,
             Kelembaban: log.kelembaban,
             pH: log.ph,
@@ -114,17 +112,17 @@
         >
             <!-- Header -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 py-6"
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
             >
-                <div>
-                    <h1 class="text-2xl font-semibold">
-                        History <span class="font-bold text-blue-500">|</span>
-                    </h1>
-                    <span class="text-xs tracking-[3px] text-gray-500"
+                <div class="flex flex-row justify-between py-6 items-center">
+                    <div class=" text-2xl font-medium">
+                    History <span class="font-semibold text-blue-500">|</span>
+                    <span class="text-[12px] tracking-[3px]"
                         >Smart Hidroponik</span
                     >
                 </div>
-                <div class="flex flex-row gap-4">
+                </div>
+                <div class="flex flex-row gap-4 justify-between sm:justify-start w-full sm:w-auto">
                     <form action="">
                         <select
                             id="dataType"
@@ -174,7 +172,8 @@
                                     <td class="px-4 py-2">{i + 1}</td>
                                     <td class="px-4 py-2">
                                         {new Date(
-                                            (log.timestamp?.seconds * 1000) - (7 * 60 * 60 * 1000),
+                                            log.timestamp?.seconds * 1000 -
+                                                7 * 60 * 60 * 1000,
                                         ).toLocaleDateString("id-ID", {
                                             timeZone: "Asia/Jakarta",
                                             day: "numeric",

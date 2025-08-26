@@ -2,7 +2,7 @@
     import { page } from "$app/stores";
     import Logo from "$lib/components/logo.svg.svelte";
     import { derived } from "svelte/store";
-    import { base } from '$app/paths';
+    import { base } from "$app/paths";
 
     const currentPath = derived(page, ($page) => $page.url.pathname);
 </script>
@@ -86,6 +86,17 @@
                 <i class="fa-solid fa-clock-rotate-left text-lg"></i>
                 Riwayat
             </a>
+        </li>
+
+        <li>
+            <button
+                type="submit"
+                on:click={logout}
+                class="h-fit block sm:block text-xs text-white/70 rounded-md hover:scale-110 transition duration-200"
+            >
+                <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                <div>Keluar</div>
+            </button>
         </li>
     </ul>
 </div>

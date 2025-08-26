@@ -4,7 +4,7 @@
     import Chart from "$lib/components/chart_graph.svelte";
     import { onMount } from "svelte";
     import { rtdb } from "$lib/firebase";
-    import { ref, onValue } from "firebase/database";
+    import { ref, onValue, set } from "firebase/database";
     import {
         getProgress,
         getProgressHumidity,
@@ -18,7 +18,7 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import Sidebar from "$lib/components/sidebar.svelte";
-    import { base } from '$app/paths';
+    import { base } from "$app/paths";
 
     $: currentPath = $page.url.pathname;
 
@@ -26,16 +26,23 @@
     let relay = [];
 
     onMount(() => {
+        // RelaySwitch();
         //iterasi data
         const relayRef = ref(rtdb, "status/");
         onValue(relayRef, (snapshot) => {
             const data = snapshot.val();
             relay = [
                 {
-                    relayStatus: data?.relay1 == 0 ? "OFF" : "ON",
+                    relayStatus: data?.mode_sirkulasi ?? 0,
+                    label: "Pompa Sirkulasi",
                 },
                 {
-                    relayStatus: data?.relay2 == 0 ? "OFF" : "ON",
+                    relayStatus: data?.relay_air ?? 0,
+                    label: "Solenoid Valve",
+                },
+                {
+                    relayStatus: data?.relay_nutrisi ?? 0,
+                    label: "Pompa Nutrisi",
                 },
             ];
         });
@@ -90,10 +97,25 @@
         });
     });
 
+    function RelaySwitch(index, newValue) {
+        relay[index].relayStatus = newValue;
+
+        // Tentukan key sesuai index
+        const relayKey =
+            index === 0
+                ? "relay3"
+                : index === 1
+                  ? "relay_air"
+                  : "relay_nutrisi";
+
+        // Kirim ke Firebase
+        const relayRef = ref(rtdb, `manual/${relayKey}`);
+        set(relayRef, newValue);
+    }
     async function logout() {
         try {
             await signOut(auth);
-            
+
             goto(`${base}/login`);
         } catch (error) {
             alert(`Logout gagal: ${error.message}`);
@@ -115,11 +137,10 @@
                     >
                 </div>
 
-                <!-- svelte-ignore a11y_consider_explicit_label -->
                 <button
                     type="submit"
                     on:click={logout}
-                    class="h-fit text-2xl text-red-500 font-semibold rounded-md hover:scale-110 transition duration-200"
+                    class="h-fit hidden sm:block text-2xl text-red-500 font-semibold rounded-md hover:scale-110 transition duration-200"
                 >
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <div class="text-[12px]">Keluar</div>
@@ -135,7 +156,6 @@
                     >
                         <div class="flex gap-5 content-end">
                             <div
-                                class="fa-solid fa-water-ladder text-4xl mb-2 text-blue-500 m-2"
                                 style="display: flex; align-items: center;"
                             ></div>
                             <div class="">
@@ -161,15 +181,58 @@
             <div class="flex flex-wrap gap-3 my-6">
                 {#each relay as item, i}
                     <div
-                        class={`bg-white rounded-xl shadow p-4 text-center border-2 ${item.relayStatus === "ON" ? "border-green-600" : "border-red-500"}`}
+                        class={` flex flex-col justify-between bg-white rounded-xl shadow p-4 text-center border-2 ${
+                            item.label == "Pompa Sirkulasi"
+                                ? item.relayStatus == 1
+                                    ? "border-green-600"
+                                    : item.relayStatus == 2
+                                      ? "border-blue-600"
+                                      : "border-red-500"
+                                : item.relayStatus == 1
+                                  ? "border-green-600"
+                                  : "border-red-500"
+                        }`}
                     >
                         <div class="text-sm text-gray-600 mb-2">
-                            Kondisi Pompa {i + 1}
+                            {item.label}
+                        </div>
+                        <div>
+                            {#if item.label == "Pompa Sirkulasi"}
+                                <select
+                                    id="mode"
+                                    class="border rounded-lg px-2 py-1 text-sm "
+                                    bind:value={relay[i].relayStatus}
+                                    on:change={(e) =>
+                                        RelaySwitch(i, +e.target.value)}
+                                >
+                                    <option value={0}>Mati</option>
+                                    <option value={1}>Hidup</option>
+                                    <option value={2}>Otomatis</option>
+                                </select>
+                            {/if}
                         </div>
                         <div
-                            class={`text-lg font-bold ${item.relayStatus === "ON" ? "text-green-600" : "text-red-500"}`}
+                            class={`text-md font-bold pt-2 ${
+                                item.label == "Pompa Sirkulasi"
+                                    ? item.relayStatus == 1
+                                        ? "text-green-600"
+                                        : item.relayStatus == 2
+                                          ? "text-blue-600"
+                                          : "text-red-500"
+                                    : item.relayStatus == 1
+                                      ? "text-green-600"
+                                      : "text-red-500"
+                            }`}
                         >
-                            ⚡ {item.relayStatus}
+                            {item.label == "Pompa Sirkulasi"
+                                ? item.relayStatus == 0
+                                    ? "Mati"
+                                    : item.relayStatus == 1
+                                      ? "Hidup"
+                                      : "Otomatis"
+                                : item.relayStatus == 1
+                                  ? "ON"
+                                  : "OFF"}
                         </div>
                     </div>
                 {/each}
@@ -177,3 +240,29 @@
         </div>
     </div>
 </div>
+
+<style>
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 28px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+</style>
