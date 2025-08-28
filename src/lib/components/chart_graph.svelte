@@ -13,6 +13,7 @@
 
     let selectedData = "ph";
     let chartInstance;
+    let limit = 10;
 
     $: if (logs.length > 0 && selectedData) {
         let data = [];
@@ -20,53 +21,66 @@
 
         ChartSetup(selectedData);
         UpdateData(data, timestamp);
-
         ChartRender(data, timestamp, logs);
     }
 
+    function UpdateLimit() {
+        if (window.innerWidth >= 640) {
+            limit = 10;
+        } else {
+            limit = 5;
+        }
+    }
+
+    $: if (limit) {
+        
+        fetchLogs(limit);
+    }
+
     onMount(() => {
-        const fetchLogs = async () => {
-            try {
-                const logRef = collection(db, "historisensor");
-                const q = query(logRef, orderBy("timestamp", "desc"));
-                const snapshot = await getDocs(q);
-
-                logs = snapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-
-                logs = logs.slice(0, 10).reverse();
-            } catch (error) {
-                console.error("Gagal mengambil log:", error);
-            }
-        };
-
-        fetchLogs();
+        UpdateLimit();
+        window.addEventListener("resize", UpdateLimit);
     });
+
+    const fetchLogs = async (limit) => {
+        try {
+            const logRef = collection(db, "historisensor");
+            const q = query(logRef, orderBy("timestamp", "desc"));
+            const snapshot = await getDocs(q);
+
+            logs = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+
+            logs = logs.slice(0, limit).reverse();
+        } catch (error) {
+            console.error("Gagal mengambil log:", error);
+        }
+    };
 
     function UpdateData(data, timestamp) {
         for (let i = 0; i < logs.length; i++) {
             data.push(logs[i]?.[selectedData] ?? 0);
 
-const tsMillis = (logs[i]?.timestamp.seconds * 1000) - (7 * 60 * 60 * 1000);
-const dateObj = new Date(tsMillis);
+            const tsMillis =
+                logs[i]?.timestamp.seconds * 1000 - 7 * 60 * 60 * 1000;
+            const dateObj = new Date(tsMillis);
 
-const tanggal = dateObj.toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-});
+            const tanggal = dateObj.toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            });
 
-const waktu = dateObj.toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-});
+            const waktu = dateObj.toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            });
 
-const formatted = `${tanggal} ${waktu}`;
-timestamp.push(formatted);
-
+            const formatted = `${tanggal} ${waktu}`;
+            timestamp.push(formatted);
         }
     }
 
@@ -203,10 +217,9 @@ timestamp.push(formatted);
             </select>
         </div>
     </form>
-    <div class=" w-full sm:max-w-screen-lg h-[400px] bg-white sm:p-4 rounded-lg sm:shadow-md">
-        <canvas
-            bind:this={chartCanvas}
-            class="w-full h-auto"
-        ></canvas>
+    <div
+        class=" w-full sm:max-w-screen-lg h-[400px] bg-white sm:p-4 rounded-lg sm:shadow-md"
+    >
+        <canvas bind:this={chartCanvas} class="w-full h-auto"></canvas>
     </div>
 </div>
