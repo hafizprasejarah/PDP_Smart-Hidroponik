@@ -11,7 +11,6 @@
     import { ref, onValue } from "firebase/database";
     import { signInWithEmailAndPassword } from "firebase/auth";
     import { onMount } from "svelte";
-
     import { onAuthStateChanged } from "firebase/auth";
     import { goto } from "$app/navigation";
 
@@ -22,9 +21,7 @@
     let nutrisi = 0;
     let tinggiAir = 0;
     let suhuAir = 0;
-
-    let reLay1 = 0;
-    let reLay2 = 0;
+    let relays = [];
 
     $: progress = getProgress(suhu);
     $: progresspH = getProgresspH(ph);
@@ -34,7 +31,6 @@
     $: progressWaterHeight = getProgressWaterHeigt(tinggiAir);
 
     onMount(() => {
-
         const email = import.meta.env.VITE_FIREBASE_EMAIL;
         const password = import.meta.env.VITE_FIREBASE_PASSWORD;
 
@@ -52,17 +48,30 @@
                     suhuAir = data?.suhuAir || 0;
                 });
 
-                const relayStatus = ref(rtdb, "status/");
-                onValue(relayStatus, (snapshot) => {
+                const relayRef = ref(rtdb, "status/");
+                onValue(relayRef, (snapshot) => {
                     const data = snapshot.val();
-                    reLay1 = data?.relay1;
-                    reLay2 = data?.relay2;
+                    relays = [
+                        {
+                            relayStatus: data?.mode_sirkulasi ?? 0,
+                            label: "Pompa Sirkulasi",
+                        },
+                        {
+                            relayStatus: data?.relay_air ?? 0,
+                            label: "Solenoid Valve",
+                        },
+                        {
+                            relayStatus: data?.relay_nutrisi ?? 0,
+                            label: "Pompa Nutrisi",
+                        },
+                    ];
                 });
             })
             .catch((err) => {
                 console.error("Login gagal:", err.message);
             });
 
+        console.log(auth);
         getBMKGData();
     });
 
@@ -74,13 +83,6 @@
         tcc: "-",
         local_datetime: "-",
         image: "",
-    };
-
-    $: statusRelay1 = reLay1 == 0 ? "OFF" : "ON";
-    $: statusRelay2 = reLay2 == 0 ? "OFF" : "ON";
-
-    $: relay = {
-        relays: [statusRelay1, statusRelay2],
     };
 
     async function getBMKGData() {
@@ -317,17 +319,47 @@
 
         <!-- Relay -->
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10 max-w-4xl mx-auto"
+            class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 max-w-4xl mx-auto"
         >
-            {#each relay.relays as status, i}
-                <div class="bg-white rounded-xl shadow p-4 text-center">
+            {#each relays as item, i}
+                <div
+                    class={` flex flex-col justify-between bg-white rounded-xl shadow p-4 text-center border-2 ${
+                        item.label == "Pompa Sirkulasi"
+                            ? item.relayStatus == 1
+                                ? "border-green-600"
+                                : item.relayStatus == 2
+                                  ? "border-blue-600"
+                                  : "border-red-500"
+                            : item.relayStatus == 1
+                              ? "border-green-600"
+                              : "border-red-500"
+                    }`}
+                >
                     <div class="text-sm text-gray-600 mb-2">
-                        Kondisi Pompa {i + 1}
+                        {item.label}
                     </div>
                     <div
-                        class={`text-lg font-bold ${status === "ON" ? "text-green-600" : "text-red-500"}`}
+                        class={`text-md font-bold pt-2 ${
+                            item.label == "Pompa Sirkulasi"
+                                ? item.relayStatus == 1
+                                    ? "text-green-600"
+                                    : item.relayStatus == 2
+                                      ? "text-blue-600"
+                                      : "text-red-500"
+                                : item.relayStatus == 1
+                                  ? "text-green-600"
+                                  : "text-red-500"
+                        }`}
                     >
-                        ⚡ {status}
+                        {item.label == "Pompa Sirkulasi"
+                            ? item.relayStatus == 0
+                                ? "Mati"
+                                : item.relayStatus == 1
+                                  ? "Hidup"
+                                  : "Otomatis"
+                            : item.relayStatus == 1
+                              ? "ON"
+                              : "OFF"}
                     </div>
                 </div>
             {/each}

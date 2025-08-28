@@ -3,8 +3,21 @@
     import Logo from "$lib/components/logo.svg.svelte";
     import { derived } from "svelte/store";
     import { base } from "$app/paths";
+    import { auth } from "$lib/firebase";
+    import { goto } from "$app/navigation";
+    import { signOut } from "firebase/auth";
 
     const currentPath = derived(page, ($page) => $page.url.pathname);
+
+    async function logout() {
+        try {
+            await signOut(auth);
+
+            goto(`${base}/login`);
+        } catch (error) {
+            alert(`Logout gagal: ${error.message}`);
+        }
+    }
 </script>
 
 <div
@@ -55,11 +68,11 @@
     </nav>
 </div>
 
-<!-- Mobile Navbar -->
+
 <div
-    class="sm:hidden fixed bottom-0 left-0 right-0 bg-blue-500 text-white shadow-lg z-50"
+    class="sm:hidden fixed bottom-0 left-0 right-0 bg-blue-500 text-white shadow-lg z-50 flex justify-center w-full"
 >
-    <ul class="flex justify-around items-center py-2">
+    <ul class="flex justify-around items-center py-2 w-[80%]">
         <li>
             <a
                 href="{base}/login/admin/dashboard"

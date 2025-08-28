@@ -13,7 +13,6 @@
         Timestamp,
     } from "firebase/firestore";
     import { db } from "$lib/firebase";
-
     import Sidebar from "$lib/components/sidebar.svelte";
 
     $: currentPath = $page.url.pathname;
@@ -101,6 +100,16 @@
 
         XLSX.writeFile(workbook, "log_sensor.xlsx");
     }
+
+    async function logout() {
+        try {
+            await signOut(auth);
+
+            goto(`${base}/login`);
+        } catch (error) {
+            alert(`Logout gagal: ${error.message}`);
+        }
+    }
 </script>
 
 <div class="w-full flex flex-row bg-[#f4f7fa] min-h-screen pb-[80px] sm:p-0">
@@ -112,17 +121,21 @@
         >
             <!-- Header -->
             <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 py-6"
             >
                 <div class="flex flex-row justify-between py-6 items-center">
                     <div class=" text-2xl font-medium">
-                    History <span class="font-semibold text-blue-500">|</span>
-                    <span class="text-[12px] tracking-[3px]"
-                        >Smart Hidroponik</span
-                    >
+                        History <span class="font-semibold text-blue-500"
+                            >|</span
+                        >
+                        <span class="text-[12px] tracking-[3px]"
+                            >Smart Hidroponik</span
+                        >
+                    </div>
                 </div>
-                </div>
-                <div class="flex flex-row gap-4 justify-between sm:justify-start w-full sm:w-auto">
+                <div
+                    class="flex flex-row gap-4 justify-between md:justify-start w-full md:w-auto"
+                >
                     <form action="">
                         <select
                             id="dataType"

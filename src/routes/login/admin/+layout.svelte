@@ -5,6 +5,7 @@
     import { doc, getDoc, collection, getDocs } from "firebase/firestore";
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
+    
 
     let loading = true;
 
@@ -12,6 +13,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 goto(`${base}/login`);
+                return;
             }
 
             // Ambil role dari Firestore

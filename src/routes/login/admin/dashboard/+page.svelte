@@ -83,9 +83,9 @@
                 },
                 {
                     label: "Tinggi Air",
-                    value: data?.waterLevel ?? 0,
+                    value: data?.volumeAir ?? 0,
                     unit: "liter",
-                    progress: getProgressNutrition(data?.waterLevel || 0),
+                    progress: getProgressNutrition(data?.volumeAir || 0),
                 },
                 {
                     label: "Suhu Air",
@@ -178,7 +178,9 @@
                 {/each}
             </div>
 
-            <div class="flex flex-wrap gap-3 my-6">
+            <div
+                class="grid grid-cols-1 w-full py-6 sm:grid-cols-3 gap-4 sm:w-[80%]"
+            >
                 {#each relay as item, i}
                     <div
                         class={` flex flex-col justify-between bg-white rounded-xl shadow p-4 text-center border-2 ${
@@ -200,7 +202,7 @@
                             {#if item.label == "Pompa Sirkulasi"}
                                 <select
                                     id="mode"
-                                    class="border rounded-lg px-2 py-1 text-sm "
+                                    class="border rounded-lg px-2 py-1 text-sm"
                                     bind:value={relay[i].relayStatus}
                                     on:change={(e) =>
                                         RelaySwitch(i, +e.target.value)}
@@ -226,7 +228,7 @@
                         >
                             {item.label == "Pompa Sirkulasi"
                                 ? item.relayStatus == 0
-                                    ? "Mati"
+                                    ? "OFF"
                                     : item.relayStatus == 1
                                       ? "Hidup"
                                       : "Otomatis"
