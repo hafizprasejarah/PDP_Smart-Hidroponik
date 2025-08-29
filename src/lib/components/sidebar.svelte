@@ -25,7 +25,7 @@
     id="navbar"
 >
     <div
-        class="flex flex-row items-center gap-2 rounded-md w-full px-6 py-[10px] top-[20px] relative bg-black/30"
+        class="flex flex-row items-center gap-2  w-full px-6 py-[10px] top-[20px] relative bg-[#59b23b]"
     >
         <div>
             <Logo />

@@ -70,8 +70,6 @@
             .catch((err) => {
                 console.error("Login gagal:", err.message);
             });
-
-        console.log(auth);
         getBMKGData();
     });
 
@@ -135,7 +133,7 @@
 
                     <div class="flex-1 space-y-2">
                         <h2 class="text-xl font-semibold">
-                            Prakiraan Cuaca Surakarta
+                            Perkiraan Cuaca Surakarta
                         </h2>
                         <p class="text-lg capitalize">{cuaca.weather_desc}</p>
                         <div class="grid grid-cols-1 gap-3 text-sm">
@@ -326,12 +324,12 @@
                     class={` flex flex-col justify-between bg-white rounded-xl shadow p-4 text-center border-2 ${
                         item.label == "Pompa Sirkulasi"
                             ? item.relayStatus == 1
-                                ? "border-green-600"
+                                ? "border-[#59b23b]"
                                 : item.relayStatus == 2
                                   ? "border-blue-600"
                                   : "border-red-500"
                             : item.relayStatus == 1
-                              ? "border-green-600"
+                              ? "border-[#59b23b]"
                               : "border-red-500"
                     }`}
                 >
@@ -342,12 +340,12 @@
                         class={`text-md font-bold pt-2 ${
                             item.label == "Pompa Sirkulasi"
                                 ? item.relayStatus == 1
-                                    ? "text-green-600"
+                                    ? "text-[#59b23b]"
                                     : item.relayStatus == 2
                                       ? "text-blue-600"
                                       : "text-red-500"
                                 : item.relayStatus == 1
-                                  ? "text-green-600"
+                                  ? "text-[#59b23b]"
                                   : "text-red-500"
                         }`}
                     >

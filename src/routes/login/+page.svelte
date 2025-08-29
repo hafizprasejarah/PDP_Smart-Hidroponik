@@ -34,7 +34,7 @@
 >
     <!-- wrapper -->
     <div
-        class="flex flex-col w-full max-w-[240px] shadow-2xl p-8 bg-white rounded-2xl sm:max-w-sm"
+        class="flex flex-col w-full max-w-[300px] shadow-2xl p-8 bg-white rounded-2xl sm:max-w-sm"
     >
         <h1
             class="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-6"
@@ -58,7 +58,7 @@
                 }}
             />
             <div class="border-b-2 mb-5"></div>
-            <label for="password">password</label>
+            <label for="password">Password</label>
             <input
                 required
                 type="password"

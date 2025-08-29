@@ -125,7 +125,7 @@
             >
                 <div class="flex flex-row justify-between py-6 items-center">
                     <div class=" text-2xl font-medium">
-                        History <span class="font-semibold text-blue-500"
+                        Riwayat <span class="font-semibold text-blue-500"
                             >|</span
                         >
                         <span class="text-[12px] tracking-[3px]"
